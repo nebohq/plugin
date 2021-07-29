@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-const build = require('../src/build');
 const init = require('../src/init');
+const build = require('../src/build');
+const watch = require('../src/watch');
 
-const commands = [build, init].reduce((acc, runner) => {
+const commands = [build, init, watch].reduce((acc, runner) => {
   acc[runner.command] = (...args) => runner.run(...args);
   return acc;
 }, {});

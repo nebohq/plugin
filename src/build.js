@@ -26,14 +26,15 @@ class Compiler {
       configPath,
       publicPath: resolve(publicPath),
       globalStylesPath,
+      modifyConfigWithUserConfiguration,
     });
 
     console.log('Building Nebo...');
-    webpack(modifyConfigWithUserConfiguration(config), (err, stats) => {
+    webpack(config, (err, stats) => {
       if (err || stats.hasErrors()) {
         const errors = err ? [err] : stats.compilation.errors;
-        console.error('Failed to build Nebo assets.');
-        errors.forEach((error) => console.error(error.message));
+        console.error('Failed to build Nebo assets with the following errors:');
+        errors.forEach((error) => console.error('          ', error.message));
         process.exit(1);
       } else {
         const builtAssets = [...stats.compilation.assetsInfo.keys()];
@@ -47,9 +48,9 @@ class Compiler {
   }
 
   buildConfig({
-    configPath, globalStylesPath, publicPath, isDevelopment,
+    configPath, globalStylesPath, publicPath, isDevelopment, modifyConfigWithUserConfiguration,
   }) {
-    return {
+    return modifyConfigWithUserConfiguration({
       entry: {
         'nebo-config': [
           configPath,
@@ -146,7 +147,7 @@ class Compiler {
       optimization: {
         minimizer: [new TerserPlugin({ extractComments: false })],
       },
-    };
+    });
   }
 }
 
@@ -158,3 +159,4 @@ Compiler.allowedOptions = {
 
 module.exports = new Compiler();
 module.exports.command = 'build';
+module.exports.allowedOptions = Compiler.allowedOptions;
