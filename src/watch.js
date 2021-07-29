@@ -38,7 +38,6 @@ class Watcher {
           new Date().toLocaleString()
         }] Failed to build Nebo assets with the following errors:`);
         errors.forEach((error) => console.error('          ', error.message));
-        process.exit(1);
       } else {
         const builtAssets = [...stats.compilation.assetsInfo.keys()];
         stats.compilation.warnings.map((warning) => console.warn('[WARN]', warning.message));
