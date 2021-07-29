@@ -12,13 +12,12 @@ module.exports = function compile() {
     globalStylesPath,
     webpackPath,
   } = defaults.parseCompilerConfig();
-  const globalStylePaths = Array.isArray(globalStylesPath) ? globalStylesPath : [globalStylesPath];
 
   const config = {
     entry: {
       'nebo-config': [
         configPath,
-        ...globalStylePaths,
+        ...globalStylesPath,
       ].filter(Boolean),
     },
     output: {
@@ -39,7 +38,7 @@ module.exports = function compile() {
             loader: 'babel-loader',
             options: {
               presets: [
-                '@babel/preset-env',
+                ['@babel/preset-env', { loose: true }],
                 '@babel/preset-react',
               ],
             },
@@ -111,10 +110,13 @@ module.exports = function compile() {
   // eslint-disable-next-line global-require
   if (existsSync(webpackPath)) configure = require(webpackPath).configure;
 
+  console.log('Compiling Nebo...');
   webpack(configure(config), (err, stats) => {
     if (err || stats.hasErrors()) {
       console.error(err || stats.compilation.errors[0]);
       process.exit(1);
+    } else {
+      console.log('Successfully compiled Nebo.');
     }
   });
 };

@@ -15,7 +15,7 @@ module.exports.parseCompilerConfig = () => {
     isDevelopment = defaults.isDevelopment,
     configPath = defaults.configPath,
     publicPath = defaults.publicPath,
-    globalStylesPath = defaults.globalStylesPath,
+    globalStylesPath: stylePaths = defaults.globalStylesPath,
     webpackPath = defaults.webpackPath,
   } = existsSync('./.neborc') ? JSON.parse(readFileSync('./.neborc')) : {};
 
@@ -24,6 +24,6 @@ module.exports.parseCompilerConfig = () => {
     configPath,
     webpackPath: resolve(webpackPath),
     publicPath: resolve(publicPath),
-    globalStylesPath,
+    globalStylesPath: Array.isArray(stylePaths) ? stylePaths : [stylePaths].filter(Boolean),
   };
 };
