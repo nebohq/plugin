@@ -59,11 +59,11 @@ class Compiler {
       },
       output: {
         path: publicPath,
-        filename: `${basename(configPath).replace(/\.js(x)?$/, '')}.js`,
+        filename: 'nebo.config.js',
       },
       plugins: [
         new MiniCssExtractPlugin({
-          filename: `${basename(configPath).replace(/\.js(x)?$/, '')}.css`,
+          filename: 'nebo.config.css',
         }),
       ],
       module: {
