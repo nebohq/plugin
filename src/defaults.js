@@ -1,11 +1,11 @@
 const { resolve } = require('path');
-const { existsSync, readFileSync } = require('fs');
+const { existsSync } = require('fs');
 
 const defaults = {
   isDevelopment: process.env.NODE_ENV !== 'production',
   configPath: './nebo.config.js',
   webpackPath: './nebo.webpack.js',
-  publicPath: `${process.cwd()}/public`,
+  publicPath: './public',
   globalStylesPath: null,
 };
 
@@ -16,14 +16,14 @@ module.exports.parseCompilerConfig = () => {
     configPath = defaults.configPath,
     publicPath = defaults.publicPath,
     globalStylesPath: stylePaths = defaults.globalStylesPath,
-    webpackPath = defaults.webpackPath,
-  } = existsSync('./.neborc') ? JSON.parse(readFileSync('./.neborc')) : {};
+    configure = (config) => config,
+  } = existsSync(defaults.webpackPath) ? require(resolve(defaults.webpackPath)) : {};
 
   return {
     isDevelopment,
     configPath,
-    webpackPath: resolve(webpackPath),
     publicPath: resolve(publicPath),
     globalStylesPath: Array.isArray(stylePaths) ? stylePaths : [stylePaths].filter(Boolean),
+    configure,
   };
 };
