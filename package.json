@@ -2,9 +2,15 @@
   "name": "@nebohq/plugin",
   "version": "0.0.1",
   "description": "Runs a webpack configuration when build is called",
-  "main": "bin/index.js",
+  "main": "bin/nebo.js",
+  "files": [
+    "bin",
+    "src",
+    "hooks",
+    "static"
+  ],
   "bin": {
-    "nebo": "./bin/index.js"
+    "nebo": "bin/nebo.js"
   },
   "author": "Nebo Engineering <engineering@nebo.com>",
   "license": "MIT",
@@ -12,6 +18,7 @@
     "@babel/core": "^7.14.8",
     "@babel/preset-env": "^7.14.8",
     "@babel/preset-react": "^7.14.5",
+    "@nebohq/plugin": "^0.0.1",
     "babel-loader": "^8.2.2",
     "css-loader": "^6.2.0",
     "mini-css-extract-plugin": "^2.1.0",
