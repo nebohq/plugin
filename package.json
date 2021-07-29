@@ -1,6 +1,6 @@
 {
   "name": "@nebohq/plugin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Runs a webpack configuration when build is called",
   "main": "bin/nebo.js",
   "files": [
@@ -24,7 +24,6 @@
     "sass-loader": "^12.1.0",
     "style-loader": "^3.2.1",
     "terser-webpack-plugin": "^5.1.4",
-    "webpack": "^5.47.0",
-    "webpack-dev-server": "^3.11.2"
+    "webpack": "^5.47.0"
   }
 }
