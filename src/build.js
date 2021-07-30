@@ -27,20 +27,28 @@ class Compiler {
     });
 
     this.logger.log('Building Nebo...');
-    webpack(config, (err, stats) => {
-      if (err || stats.hasErrors()) {
-        const errors = err ? [err] : stats.compilation.errors;
-        this.logger.error('Failed to build Nebo assets with the following errors:');
-        errors.forEach((error) => this.logger.error('          ', error.message));
-        process.exit(1);
-      } else {
-        const builtAssets = [...stats.compilation.assetsInfo.keys()];
-        stats.compilation.warnings.map((warning) => this.logger.warn('[WARN]', warning.message));
-        this.logger.log(`
-          Successfully built ${builtAssets.length} file${builtAssets.length === 1 ? '' : 's'}:
-          ${builtAssets.map((asset) => (join(publicPath, asset))).join('\n          ')}
-        `.trim());
-      }
+
+    return new Promise((resolvePromise, reject) => {
+      webpack(config, (err, stats) => {
+        if (err || stats.hasErrors()) {
+          const errors = err ? [err] : stats.compilation.errors;
+          const errorMessage = `
+            Failed to build Nebo assets with the following errors:
+            ${errors.map((error) => error.message).join('\n          ')}
+          `.trim();
+          this.logger.error(errorMessage);
+          reject(new Error(errorMessage));
+          process.exit(1);
+        } else {
+          const builtAssets = [...stats.compilation.assetsInfo.keys()];
+          stats.compilation.warnings.map((warning) => this.logger.warn('[WARN]', warning.message));
+          this.logger.log(`
+            Successfully built ${builtAssets.length} file${builtAssets.length === 1 ? '' : 's'}:
+            ${builtAssets.map((asset) => (join(publicPath, asset))).join('\n          ')}
+          `.trim());
+          resolvePromise(stats);
+        }
+      });
     });
   }
 

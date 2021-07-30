@@ -28,6 +28,8 @@ class Initializer {
       - ${configPath} contains the Nebo JS library configuration. 
       - ${defaults.webpackPath} contains the Nebo webpack configuration.
     `.trim());
+
+    return Promise.resolve(true);
   }
 
   getNeboConfigContents(accessToken) {

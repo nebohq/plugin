@@ -45,6 +45,7 @@ class Watcher {
         `.trim());
       }
     });
+    return Promise.resolve();
   }
 
   buildConfig({
