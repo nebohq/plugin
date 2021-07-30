@@ -3,8 +3,8 @@ const { existsSync } = require('fs');
 
 const defaults = {
   isDevelopment: process.env.NODE_ENV !== 'production',
-  configPath: './nebo.config.js',
-  webpackPath: './nebo.webpack.js',
+  configPath: './nebo.js',
+  webpackPath: './nebo.config.js',
   publicPath: './public',
   globalStylesPath: null,
 };

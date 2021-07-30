@@ -34,13 +34,13 @@ class Initializer {
   }
 
   getNeboConfigContents(accessToken) {
-    let configFile = readFileSync(join(__dirname, '..', 'static', 'nebo.config.js')).toString();
+    let configFile = readFileSync(join(__dirname, '..', 'static', 'nebo.js')).toString();
     if (accessToken) configFile = configFile.replace(/\[ACCESS_TOKEN]/, accessToken);
     return configFile;
   }
 
   getWebpackConfigContents(config) {
-    let webpackFile = readFileSync(join(__dirname, '..', 'static', 'nebo.webpack.js')).toString();
+    let webpackFile = readFileSync(join(__dirname, '..', 'static', 'nebo.config.js')).toString();
     Object.entries(Initializer.optionsToFile).forEach(([option, replaceString]) => {
       const value = JSON.stringify(option in config ? config[option] : defaults[option]);
       webpackFile = webpackFile.replace(replaceString, value);

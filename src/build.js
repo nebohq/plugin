@@ -59,11 +59,11 @@ class Compiler {
       },
       output: {
         path: publicPath,
-        filename: 'nebo.config.js',
+        filename: 'nebo.js',
       },
       plugins: [
         new MiniCssExtractPlugin({
-          filename: 'nebo.config.css',
+          filename: 'nebo.css',
         }),
       ],
       module: {
