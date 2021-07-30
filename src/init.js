@@ -1,16 +1,13 @@
 const { join } = require('path');
 const { existsSync, writeFileSync, readFileSync } = require('fs');
 const defaults = require('./defaults');
-const { Parser } = require('./options');
 
 class Initializer {
-  constructor() {
-    this.optionsParser = new Parser(Initializer.allowedOptions);
+  constructor({ logger = console } = {}) {
+    this.logger = logger;
   }
 
-  run(...args) {
-    const options = this.optionsParser.parse(args);
-
+  run(options) {
     const {
       accessToken,
       configPath = defaults.configPath,
@@ -26,7 +23,7 @@ class Initializer {
       writeFileSync(defaults.webpackPath, this.getWebpackConfigContents(options));
     }
 
-    console.log(`
+    this.logger.log(`
       Finished setting up Nebo.
       - ${configPath} contains the Nebo JS library configuration. 
       - ${defaults.webpackPath} contains the Nebo webpack configuration.
@@ -49,18 +46,17 @@ class Initializer {
   }
 }
 
-Initializer.allowedOptions = {
-  '--access-token': 'accessToken',
-  '--config-path': 'configPath',
-  '--public-path': 'publicPath',
-  '--global-styles-path': 'globalStylesPath',
-};
-
 Initializer.optionsToFile = {
   configPath: 'CONFIG_PATH',
   publicPath: 'PUBLIC_PATH',
   globalStylesPath: 'GLOBAL_STYLES_PATH',
 };
 
-module.exports = new Initializer();
+module.exports = { singleton: new Initializer(), Initializer };
 module.exports.command = 'init';
+module.exports.allowedOptions = {
+  '--access-token': 'accessToken',
+  '--config-path': 'configPath',
+  '--public-path': 'publicPath',
+  '--global-styles-path': 'globalStylesPath',
+};

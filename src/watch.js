@@ -1,17 +1,14 @@
 const { resolve, join } = require('path');
 const webpack = require('webpack');
-const { Parser } = require('./options');
 const Compiler = require('./build');
 const defaults = require('./defaults');
 
 class Watcher {
-  constructor() {
-    this.optionsParser = new Parser(Watcher.allowedOptions);
+  constructor({ logger = console } = {}) {
+    this.logger = logger;
   }
 
-  run(...args) {
-    const options = this.optionsParser.parse(args);
-
+  run(options) {
     const {
       isDevelopment,
       configPath,
@@ -28,24 +25,24 @@ class Watcher {
       modifyConfigWithUserConfiguration,
     });
 
-    console.log('Nebo is watching for changes...');
+    this.logger.log('Nebo is watching for changes...');
     webpack(config).watch({
       ignored: ['**/node_modules'],
     }, (err, stats) => {
       if (err || stats.hasErrors()) {
         const errors = err ? [err] : stats.compilation.errors;
-        console.error(`[${
+        this.logger.error(`[${
           new Date().toLocaleString()
         }] Failed to build Nebo assets with the following errors:`);
-        errors.forEach((error) => console.error('          ', error.message));
+        errors.forEach((error) => this.logger.error('          ', error.message));
       } else {
         const builtAssets = [...stats.compilation.assetsInfo.keys()];
-        stats.compilation.warnings.map((warning) => console.warn('[WARN]', warning.message));
-        console.log(`[${
+        stats.compilation.warnings.map((warning) => this.logger.warn('[WARN]', warning.message));
+        this.logger.log(`[${
           new Date().toLocaleString()
-        }] Successfully built ${builtAssets.length} file${builtAssets.length === 1 ? '' : 's'}: ${
-          builtAssets.map((asset) => (join(publicPath, asset))).join(', ')
-        }`);
+        }] Successfully built ${builtAssets.length} file${builtAssets.length === 1 ? '' : 's'}:
+          ${builtAssets.map((asset) => (join(publicPath, asset))).join('\n          ')}
+        `.trim());
       }
     });
   }
@@ -57,7 +54,7 @@ class Watcher {
     globalStylesPath,
     modifyConfigWithUserConfiguration,
   }) {
-    const config = Compiler.buildConfig({
+    const config = Compiler.singleton.buildConfig({
       isDevelopment,
       configPath,
       publicPath: resolve(publicPath),
@@ -72,9 +69,6 @@ class Watcher {
   }
 }
 
-Watcher.allowedOptions = {
-  ...Compiler.allowedOptions,
-};
-
-module.exports = new Watcher();
+module.exports = { singleton: new Watcher(), Watcher };
 module.exports.command = 'watch';
+module.allowedOptions = { ...Compiler.allowedOptions };

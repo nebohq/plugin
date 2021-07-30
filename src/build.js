@@ -1,18 +1,15 @@
 const webpack = require('webpack');
-const { join, basename, resolve } = require('path');
+const { join, resolve } = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const defaults = require('./defaults');
-const { Parser } = require('./options');
 
 class Compiler {
-  constructor() {
-    this.optionsParser = new Parser(Compiler.allowedOptions);
+  constructor({ logger = console } = {}) {
+    this.logger = logger;
   }
 
-  run(...args) {
-    const options = this.optionsParser.parse(args);
-
+  run(options) {
     const {
       isDevelopment,
       configPath,
@@ -29,17 +26,17 @@ class Compiler {
       modifyConfigWithUserConfiguration,
     });
 
-    console.log('Building Nebo...');
+    this.logger.log('Building Nebo...');
     webpack(config, (err, stats) => {
       if (err || stats.hasErrors()) {
         const errors = err ? [err] : stats.compilation.errors;
-        console.error('Failed to build Nebo assets with the following errors:');
-        errors.forEach((error) => console.error('          ', error.message));
+        this.logger.error('Failed to build Nebo assets with the following errors:');
+        errors.forEach((error) => this.logger.error('          ', error.message));
         process.exit(1);
       } else {
         const builtAssets = [...stats.compilation.assetsInfo.keys()];
-        stats.compilation.warnings.map((warning) => console.warn('[WARN]', warning.message));
-        console.log(`
+        stats.compilation.warnings.map((warning) => this.logger.warn('[WARN]', warning.message));
+        this.logger.log(`
           Successfully built ${builtAssets.length} file${builtAssets.length === 1 ? '' : 's'}:
           ${builtAssets.map((asset) => (join(publicPath, asset))).join('\n          ')}
         `.trim());
@@ -151,12 +148,10 @@ class Compiler {
   }
 }
 
-Compiler.allowedOptions = {
+module.exports = { singleton: new Compiler(), Compiler };
+module.exports.command = 'build';
+module.exports.allowedOptions = {
   '--config-path': 'configPath',
   '--public-path': 'publicPath',
   '--global-styles-path': 'globalStylesPath',
 };
-
-module.exports = new Compiler();
-module.exports.command = 'build';
-module.exports.allowedOptions = Compiler.allowedOptions;
