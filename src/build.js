@@ -3,6 +3,7 @@ const { join, resolve } = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const defaults = require('./defaults');
+const Command = require('./Command');
 
 class Compiler {
   constructor({ logger = console, defaultSettings = defaults } = {}) {
@@ -157,10 +158,12 @@ class Compiler {
   }
 }
 
-module.exports = { singleton: new Compiler(), Compiler };
-module.exports.command = 'build';
-module.exports.allowedOptions = {
-  '--config-path': 'configPath',
-  '--public-path': 'publicPath',
-  '--global-styles-path': 'globalStylesPath',
-};
+module.exports = new Command({
+  name: 'build',
+  runner: new Compiler(),
+  allowedOptions: {
+    '--config-path': 'configPath',
+    '--public-path': 'publicPath',
+    '--global-styles-path': 'globalStylesPath',
+  },
+});

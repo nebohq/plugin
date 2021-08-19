@@ -1,5 +1,6 @@
 const { join } = require('path');
 const { existsSync, writeFileSync, readFileSync } = require('fs');
+const Command = require('./Command');
 const defaults = require('./defaults');
 
 class Initializer {
@@ -55,11 +56,13 @@ Initializer.optionsToFile = {
   globalStylesPath: 'GLOBAL_STYLES_PATH',
 };
 
-module.exports = { singleton: new Initializer(), Initializer };
-module.exports.command = 'init';
-module.exports.allowedOptions = {
-  '--access-token': 'accessToken',
-  '--config-path': 'configPath',
-  '--public-path': 'publicPath',
-  '--global-styles-path': 'globalStylesPath',
-};
+module.exports = new Command({
+  name: 'init',
+  runner: new Initializer(),
+  allowedOptions: {
+    '--access-token': 'accessToken',
+    '--config-path': 'configPath',
+    '--public-path': 'publicPath',
+    '--global-styles-path': 'globalStylesPath',
+  },
+});

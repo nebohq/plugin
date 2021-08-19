@@ -1,9 +1,13 @@
 const Initializer = require('./init');
 const Compiler = require('./build');
 const Watcher = require('./watch');
-const Runner = require('./run');
+const CLI = require('./CLI');
 const Settings = require('./defaults');
 
 module.exports = {
-  Runner, Initializer, Compiler, Watcher, Settings,
+  CLI,
+  Settings,
+  commands: {
+    Initializer, Compiler, Watcher,
+  },
 };

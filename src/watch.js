@@ -2,6 +2,7 @@ const { resolve, join } = require('path');
 const webpack = require('webpack');
 const Compiler = require('./build');
 const defaults = require('./defaults');
+const Command = require('./Command');
 
 class Watcher {
   constructor({ logger = console, defaultSettings = defaults } = {}) {
@@ -71,6 +72,8 @@ class Watcher {
   }
 }
 
-module.exports = { singleton: new Watcher(), Watcher };
-module.exports.command = 'watch';
-module.allowedOptions = { ...Compiler.allowedOptions };
+module.exports = new Command({
+  name: 'watch',
+  runner: new Watcher(),
+  allowedOptions: { ...Compiler.allowedOptions },
+});
