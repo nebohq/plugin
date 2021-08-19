@@ -16,7 +16,7 @@ class Command {
 
   async run(...args) {
     const options = this.parser.parse(args);
-    return this.callback(options, () => this.singleton.run(options));
+    return this.callback(options, async (passedOptions) => this.singleton.run(passedOptions));
   }
 
   configure({
