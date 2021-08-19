@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Component, { configure, fetchComponent } from '@nebohq/nebo';
+import { configure, fetchComponent } from '@nebohq/nebo';
 
 const accessToken = '[ACCESS_TOKEN]';
-const directory = configure({
+const { NeboComponent, NeboHead } = configure({
   directory: {
     // Add your components here
   },
@@ -14,6 +14,6 @@ const directory = configure({
 
 const fetchSchema = async (idOrSlug) => fetchComponent({ idOrSlug, accessToken });
 
-const NeboComponent = Component;
 export default NeboComponent;
-export { directory, fetchSchema };
+export { NeboHead, fetchSchema };
+
