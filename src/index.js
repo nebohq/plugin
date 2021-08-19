@@ -1,7 +1,8 @@
-const { Initializer } = require('./init');
-const { Compiler } = require('./build');
-const { Watcher } = require('./watch');
+const Initializer = require('./init');
+const Compiler = require('./build');
+const Watcher = require('./watch');
+const Runner = require('./run');
 
 module.exports = {
-  Initializer, Compiler, Watcher,
+  Runner, Initializer, Compiler, Watcher,
 };

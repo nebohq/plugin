@@ -1,6 +1,6 @@
 {
   "name": "@nebohq/plugin",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "Runs a webpack configuration when build is called",
   "main": "src/index.js",
   "files": [
