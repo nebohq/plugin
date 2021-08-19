@@ -11,7 +11,7 @@ class Command {
     this.singleton = runner;
     this.allowedOptions = allowedOptions;
     this.parser = new Parser(allowedOptions);
-    this.callback = callback || (async (options, processor) => processor());
+    this.callback = callback || (async (options, processor) => processor(options));
   }
 
   async run(...args) {
