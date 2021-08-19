@@ -3,14 +3,15 @@ const { existsSync, writeFileSync, readFileSync } = require('fs');
 const defaults = require('./defaults');
 
 class Initializer {
-  constructor({ logger = console } = {}) {
+  constructor({ logger = console, defaultSettings = defaults } = {}) {
     this.logger = logger;
+    this.defaults = defaultSettings;
   }
 
   run(options) {
     const {
       accessToken,
-      configPath = defaults.configPath,
+      configPath = this.defaults.configPath,
     } = options;
     delete options.accessToken;
 
@@ -19,14 +20,14 @@ class Initializer {
       writeFileSync(configPath, this.getNeboConfigContents(accessToken));
     }
     // write the webpack compiler config file
-    if (!existsSync(defaults.webpackPath)) {
-      writeFileSync(defaults.webpackPath, this.getWebpackConfigContents(options));
+    if (!existsSync(this.defaults.webpackPath)) {
+      writeFileSync(this.defaults.webpackPath, this.getWebpackConfigContents(options));
     }
 
     this.logger.log(`
       Finished setting up Nebo.
       - ${configPath} contains the Nebo JS library configuration. 
-      - ${defaults.webpackPath} contains the Nebo webpack configuration.
+      - ${this.defaults.webpackPath} contains the Nebo webpack configuration.
     `.trim());
 
     return Promise.resolve(true);
@@ -41,7 +42,7 @@ class Initializer {
   getWebpackConfigContents(config) {
     let webpackFile = readFileSync(join(__dirname, '..', 'static', 'nebo.config.js')).toString();
     Object.entries(Initializer.optionsToFile).forEach(([option, replaceString]) => {
-      const value = JSON.stringify(option in config ? config[option] : defaults[option]);
+      const value = JSON.stringify(option in config ? config[option] : this.defaults[option]);
       webpackFile = webpackFile.replace(replaceString, value);
     });
     return webpackFile;

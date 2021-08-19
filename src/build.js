@@ -5,8 +5,9 @@ const TerserPlugin = require('terser-webpack-plugin');
 const defaults = require('./defaults');
 
 class Compiler {
-  constructor({ logger = console } = {}) {
+  constructor({ logger = console, defaultSettings = defaults } = {}) {
     this.logger = logger;
+    this.defaults = defaultSettings;
   }
 
   run(options) {
@@ -16,7 +17,7 @@ class Compiler {
       publicPath,
       globalStylesPath,
       configure: modifyConfigWithUserConfiguration,
-    } = { ...defaults.parseCompilerConfig(), ...options };
+    } = { ...this.defaults.parseCompilerConfig(), ...options };
 
     const config = this.buildConfig({
       isDevelopment,

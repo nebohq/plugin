@@ -4,8 +4,9 @@ const Compiler = require('./build');
 const defaults = require('./defaults');
 
 class Watcher {
-  constructor({ logger = console } = {}) {
+  constructor({ logger = console, defaultSettings = defaults } = {}) {
     this.logger = logger;
+    this.defaults = defaultSettings;
   }
 
   run(options) {
@@ -15,7 +16,7 @@ class Watcher {
       publicPath,
       globalStylesPath,
       configure: modifyConfigWithUserConfiguration,
-    } = { ...defaults.parseCompilerConfig(), ...options };
+    } = { ...this.defaults.parseCompilerConfig(), ...options };
 
     const config = this.buildConfig({
       isDevelopment,
