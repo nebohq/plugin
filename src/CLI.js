@@ -1,6 +1,6 @@
-const CLI = (commands = [], defaultCommand = 'build') => {
+const CLI = async (commands = [], defaultCommand = 'build') => {
   const commandRunners = commands.reduce((acc, command) => {
-    acc[command.name] = (...args) => command.run(...args);
+    acc[command.name] = async (...args) => command.run(...args);
     return acc;
   }, {});
 
@@ -12,7 +12,7 @@ const CLI = (commands = [], defaultCommand = 'build') => {
     if (!(command in commandRunners)) {
       throw new Error(`Unexpected command: \`${command}\``);
     } else {
-      commandRunners[command](...options);
+      await commandRunners[command](...options);
     }
   } catch (e) {
     // eslint-disable-next-line no-console
